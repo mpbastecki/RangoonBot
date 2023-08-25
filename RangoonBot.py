@@ -25,6 +25,14 @@ async def ping(ctx):
 async def ping(ctx):
     await ctx.respond("Pong")
 
+@bot.command()
+async def pong(ctx):
+    await ctx.send("Ping")
+    
+@bot.slash_command(description = "Ping")
+async def pong(ctx):
+    await ctx.respond("Ping")
+
 fortunes = ["It is certain", "As I see it, yes", "Reply hazy, try again", "Don't count on it",
          "It is decidedly so", "Most likely", "Ask again later", "My reply is no",
          "Without a doubt", "Outlook good", "Better not tell you now", "My sources say no",
