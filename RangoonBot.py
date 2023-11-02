@@ -5,6 +5,7 @@ import random
 from random import randint
 from random import seed    
 import TenGiphPy
+import fortune
 
 intents = discord.Intents.default() # or .all() if you ticked all, that is easier
 intents.members = False # If you ticked the SERVER MEMBERS INTENT
@@ -22,8 +23,22 @@ bot = commands.Bot(command_prefix=prefix, intents=intents)
 #startup events for the bot
 @bot.event
 async def on_ready():
-    await bot.get_channel(1061502200397963336).send("I am fried :crab:")#techfloor botlog 881993586751713290
+    #await bot.get_channel(1061502200397963336).send("I am fried :crab:")
     await bot.change_presence(activity=discord.Game("on the beach"))
+count1 = 0
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+    global count1
+    if(count1 >30):
+        count1 = 0
+        if(randint(1,100) < 9):
+            await message.channel.send("crab")
+    else:
+        print(count1)
+        count1 += 1
+
 #ping
 @bot.slash_command(description = "Pong")
 async def ping(ctx):
@@ -35,7 +50,7 @@ async def pong(ctx):
     await ctx.respond("Ping")
 
 #reads fortunes
-fortunes = ["It is certain", "As I see it, yes", "Reply hazy, try again", "Don't count on it",
+fortunes2 = ["It is certain", "As I see it, yes", "Reply hazy, try again", "Don't count on it",
          "It is decidedly so", "Most likely", "Ask again later", "My reply is no",
          "Without a doubt", "Outlook good", "Better not tell you now", "My sources say no",
          "Yes definitely", "Yes", "Cannot predict now", "Outlook not so good",
@@ -45,7 +60,7 @@ fortunes = ["It is certain", "As I see it, yes", "Reply hazy, try again", "Don't
 @bot.slash_command(description="Ask a yes/no question to be answered")
 @option("question", description = "Yes/No question to be answered")
 async def m8ball(ctx,question):
-    await ctx.respond("Question: " + question + "\nAnswer: " + random.choice(fortunes))
+    await ctx.respond("Question: " + question + "\nAnswer: " + random.choice(fortunes2))
 
 images = ['1.gif', '2.png','3.gif','4.png','5.gif','6.gif','7.png']
 
@@ -63,6 +78,19 @@ async def dice(ctx, size, count):
     for x in range(int(count)):
         dicestring += "\nYou rolled a " + str(randint(1,int(size)))
     await ctx.respond(dicestring)
+
+@bot.slash_command(name='fortunes', aliases=['cookie', 'quote', 'fact', 'factoid'])
+@option("category", description = "Can be fortune, factoid, people, quote")
+async def fortunes(ctx, category='random'):
+    """Fortune Cookie! (You can also specify category[factoid,fortune,people,quote])"""
+    categories = ['fortune', 'factoid', 'people','quote']
+    if category in categories:
+        await ctx.respond(f"```fix\n{fortune.get_random_fortune(f'fortunes/{category}')}\n```")
+    else:
+        await ctx.respond(f"```fix\n{fortune.get_random_fortune(f'fortunes/{random.choice(categories)}')}\n```")
+
+
+
 
 giftag = "crab"
 """@bot.slash_command(description="Random crab gif")
